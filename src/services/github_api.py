@@ -1,5 +1,8 @@
 import requests
 
+# API CALL (GET) api.github.com/user/repos
+# Retrieve the list of all repos owned by the API token user
+# https://docs.github.com/en/rest/repos/repos?apiVersion=2022-11-28#list-repositories-for-the-authenticated-user
 def get_API_repo_list(token=''):
     headers = {}
     headers['Authorization'] = f'token {token}'
@@ -10,6 +13,9 @@ def get_API_repo_list(token=''):
         return response.json()
     return None
 
+# API CALL (GET) api.github.com/repos/{owner}/{repo}/collaborators
+# Retrieve the list of collaborators for a given GitHub repository 
+# https://docs.github.com/en/rest/collaborators/collaborators?apiVersion=2022-11-28#list-repository-collaborators
 def get_API_repo_collaborators(owner,repo,token=''):
     headers = {}
     headers['Authorization'] = f'token {token}'   
@@ -18,6 +24,9 @@ def get_API_repo_collaborators(owner,repo,token=''):
         return response.json()
     return None
 
+# API CALL (GET) api.github.com/repos/{owner}/{repo}/invitations
+# Retrieve a list of pending repository invitations
+# https://docs.github.com/en/rest/collaborators/invitations?apiVersion=2022-11-28#list-repository-invitations
 def get_API_repo_invitations(owner,repo,token=''):
     headers = {}
     headers['Authorization'] = f'token {token}'   

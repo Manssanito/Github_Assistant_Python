@@ -1,5 +1,6 @@
 import tkinter as tk
 import services.github_api as gh
+import services.Output_helper as oh
 import os
 from dotenv import load_dotenv
 
@@ -31,6 +32,10 @@ class MainWindow:
         # Row 5 - Api Functions
         row5 = tk.Frame(self.root)
         row5.pack(pady=10)
+        
+        # Row 6 - Output
+        row6 = tk.Frame(self.root)
+        row6.pack(pady=10)
         
         # Row 1 - ApiKey Entry
         label_ApiKey = tk.Label(row1, text='Github ApiKey')
@@ -75,6 +80,10 @@ class MainWindow:
         
         self.button_repos_invitations = tk.Button(row5, text='Repos invitations', command=self.repos_invitations)
         self.button_repos_invitations.pack(side=tk.LEFT, padx=10)
+        
+        # Row 6
+        self.button_repos_excel = tk.Button(row6, text='Excel report', command=self.repos_excel_report)
+        self.button_repos_excel.pack(side=tk.LEFT, padx=10)
 
         # Row 6
         self.text = tk.Text(self.root)
@@ -167,6 +176,16 @@ class MainWindow:
                 self.text.insert(tk.END, f"{repo}: {user}\n")
         else:
             self.text.insert(tk.END, "this user its not a collaborator or API error")
+            
+    def repos_excel_report(self):
+        apiKey = self.entry_ApiKey.get()
+        owner = self.entry_owner.get()
+        self.text.delete(1.0, tk.END)
+        report = oh.create_excel_report(owner,apiKey)
+        if report is None:
+            self.text.insert("Report file generated.")
+        else:
+            self.text.insert("An error ocurred")
         
     def init(self):
         self.root.mainloop()

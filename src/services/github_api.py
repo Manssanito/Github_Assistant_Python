@@ -80,4 +80,67 @@ def get_all_invitations(owner, token):
                     invitation_in_repos.update({key:invitee['login']})
     return invitation_in_repos
 
+# Full List of colaborators and invitations in all repos
+def get_full_data(owner, token):
+    data = []
+    req_list = get_API_repo_list(token)
+    if req_list is not None:
+        for repo in req_list:
+            repo_name = repo['name']
+            repo_visibility = repo['visibility']
+            repo_description = repo['description']
+            repo_htm_url = repo['html_url']
+            req_collaborators = get_API_repo_collaborators(owner, repo_name, token)
+            count = 0
+            if req_collaborators is not None:
+                for collaborator in req_collaborators:
+                    count +=1
+                    colaborator_login = collaborator.get("login")
+                    collaborator_html_url = collaborator.get("html_url")
+                    collaborator_type="Collaborator"
+                    data.append({
+                        "Number": count,
+                        "Repository": repo_name,
+                        "Visibility" : repo_visibility,
+                        "Description" : repo_description,
+                        "Repository url": repo_htm_url,
+                        "User type" : collaborator_type,
+                        "User login" : colaborator_login,
+                        "User url" : collaborator_html_url
+                    })
+            req_invitations = get_API_repo_invitations(owner, repo_name, token)
+            if req_invitations is not None:
+                for invitation in req_invitations:
+                    count += 1
+                    invitee=invitation.get("invitee")
+                    invitee_login = invitee['login']
+                    invitee_html_url = invitee['html_url']
+                    invitee_type="Invitation"
+                    data.append({
+                        "Number": count,
+                        "Repository": repo_name,
+                        "Visibility" : repo_visibility,
+                        "Description" : repo_description,
+                        "Repository url": repo_htm_url,
+                        "User type" : collaborator_type,
+                        "User login" : invitee_login,
+                        "User url" : invitee_html_url
+                    })
+            if (count == 0) :
+                data.append({
+                        "Number": count,
+                        "Repository": repo_name,
+                        "Visibility" : repo_visibility,
+                        "Description" : repo_description,
+                        "Repository url": repo_htm_url,
+                        "User type" : "No User type",
+                        "User login" : "No User Login",
+                        "User url" : "No html_url"
+                    })
+    return data
+                
+                
+            
+
+
 # (delete) /repos/{owner}/{repo}/collaborators/{username}
